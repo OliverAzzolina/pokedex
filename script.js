@@ -51,20 +51,28 @@ function openDetail(currentPokemon, id){
     let detail = document.getElementById('pokemon-detail-card');
     detail.innerHTML = `
     <div id="button-area"><button onclick="closeDetail(${id})">Close</button><input type="checkbox"></div>
-    <div id="pokemon-img-container">
-    <img src="https://img.pokemondb.net/artwork/${currentPokemon['name']}.jpg">
-    </div>
+        <div id="pokemon-img-container">
+            <img src="https://img.pokemondb.net/artwork/${currentPokemon['name']}.jpg">
+        </div>
     
-    <h1>${currentPokemon['name']}</h1>
-    <h2>No. ${id}</h2>
-    <div id="types"></div>
+        <h1>${currentPokemon['name']}</h1>
+        <h2>No. ${id}</h2>
+        <div id="types"></div>
     
-    <h1>${weight} kg</h1>
-    <h1>${height} m</h1>
-    </div>
+        <h3>Weight: ${weight} kg</h3>
+        <h3>Height: ${height} m</h3>
+    
+        <button>Stats</button>
+        <button>Moves</button>
+        <button>Evolutions</button>
+
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
     
     `;
     showPokemonType(currentPokemon);
+    renderChart(currentPokemon);
 }
 
 function closeDetail(){
@@ -74,10 +82,33 @@ function closeDetail(){
     pokedex.style.display = 'flex';
 }
 
-async function showPokemonType(currentPokemon){
+function showPokemonType(currentPokemon){
     for (let i = 0; i < currentPokemon['types'].length; i++) {
         const type = currentPokemon['types'][i]['type']['name'];
         document.getElementById('types').innerHTML += `
         <div>${type}</div>`;
     }
+}
+
+function renderChart(currentPokemon){
+    const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: [currentPokemon['stats'][0]['stat']['name']],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
 }
