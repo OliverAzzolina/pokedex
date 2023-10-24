@@ -7,10 +7,16 @@ function init(){
     loadPokemonOverview();
 }
 
+let limit = 20;
+let nameUrl = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`;
+
 async function loadPokemonOverview(){
-    let nameUrl = 'https://pokeapi.co/api/v2/pokemon?limit=20&offset=0';
+  
+  
     let nameResponse = await fetch(nameUrl);
     let namesAsJSON = await nameResponse.json();
+
+    document.getElementById('pokedex').innerHTML ='';
     
     for (let i = 0; i < namesAsJSON['results'].length; i++) {
         const name = namesAsJSON['results'][i]['name'];
@@ -28,6 +34,13 @@ async function loadPokemonOverview(){
       `;
     }
   
+}
+
+function loadMorePokemon(limit){
+  newLimit = limit + 20;
+  nameUrl = `https://pokeapi.co/api/v2/pokemon?limit=${newLimit}&offset=0`;
+
+  init(newLimit);
 }
 
 async function loadPokemonData(id){
