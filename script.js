@@ -60,7 +60,7 @@ function openDetail(currentPokemon, id){
         <h1>${currentPokemon['name']}</h1>
 
         <button onclick="showInfo(${id})">Info</button>
-        <button onclick="showStats(${id})">Stats</button>
+        <button onclick="showStats()">Stats</button>
         <button onclick="showMoves(${id})">Moves</button>
         
         <div id="pokemon-info">
@@ -77,7 +77,7 @@ function openDetail(currentPokemon, id){
     showPokemonType(currentPokemon);
     loadStats(currentPokemon);
     loadMoves(currentPokemon);
-    renderChart(currentPokemon);
+    
 }
 
 function closeDetail(){
@@ -87,6 +87,7 @@ function closeDetail(){
     pokedex.style.display = 'flex';
     labels = [];
     stats = [];
+    document.getElementById('myChart').innerHTML = '';
 }
 
 function changeImg(id){
@@ -128,33 +129,35 @@ function loadStats(currentPokemon){
     const stat = currentPokemon['stats'][j]['base_stat'] ;
     stats.push(stat);
   }
+  
 }
 
 function renderChart(){
   const ctx = document.getElementById('myChart');
 
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: labels,
-      datasets: chartDataSets,
-    }
-  });
-}
+  let chartDataSets = [{
+    label: '',
+    data: stats,
+    backgroundColor: [
+      'red',
+      'green',
+      'yellow',
+      'blue',
+      'orange',
+      'pink'
+    ],
+    hoverOffset: 6
+  }];
 
-let chartDataSets = [{
-  label: '',
-  data: stats,
-  backgroundColor: [
-    'red',
-    'green',
-    'yellow',
-    'blue',
-    'orange',
-    'pink'
-  ],
-  hoverOffset: 6
-}];
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: chartDataSets,
+      }
+    });
+    
+  }
 
 function showMoves(){
   document.getElementById('moves').style.display = 'block';
@@ -166,6 +169,7 @@ function showStats(){
   document.getElementById('moves').style.display = 'none';
   document.getElementById('myChart').style.display = 'block';
   document.getElementById('pokemon-info').style.display = 'none';
+  renderChart();
 }
 
 function showInfo(){
