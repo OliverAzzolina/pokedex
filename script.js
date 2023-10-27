@@ -2,10 +2,11 @@ let names = [];
 let labels = [];
 let stats = [];
 let limit = 20;
+let ownedPokemon = [];
 let nameUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`;
-
 function init(){    
     loadPokemonOverview();
+    
 }
 
 async function loadPokemonOverview(){
@@ -48,26 +49,30 @@ function openDetail(currentPokemon, id){
     let detail = document.getElementById('pokemon-detail-card');
     detail.innerHTML = `
         <div id="button-area">
-          <button onclick="closeDetail(${id})">x</button>
-          <button id="shiny-button" onclick="changeImg(${id})">Shiny</button>
-          <input type="checkbox">
+          <button onclick="closeDetail(${id})"><img src="./img/back.png"></button>
+          <button id="shiny-button" onclick="changeImg(${id})"><h4>shiny</h4></button>
         </div>
+        <div id="name-number">
+        <h1>${currentPokemon['name']}</h1>
+        <h2>#${id}</h2>
+        </div>
+        <div id="types"></div>
         <div id="pokemon-img-container">
             <img id="pokemon-image" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png">
         </div>
         
-        <h2>No. ${id}</h2>
-        <h1>${currentPokemon['name']}</h1>
-
-        <button onclick="showInfo(${id})">Info</button>
-        <button onclick="showStats()">Stats</button>
-        <button onclick="showMoves(${id})">Moves</button>
         
+      <div class="bttn-container-btm">
+        <button class="buttons-bottom" onclick="showInfo(${id})">Info</button>
+        <button class="buttons-bottom" onclick="showStats()">Stats</button>
+        <button class="buttons-bottom" onclick="showMoves(${id})">Moves</button>
+      </div>  
         <div id="pokemon-info">
-          <div id="types"></div>
-          <h3>Weight: ${weight} kg</h3>
-          <h3>Height: ${height} m</h3>
+          <h3>Weight: </h3><span>${weight} kg</span>
+          <h3>Height: </h3><span>${height} m</span>
+          <h3>Abilities: </h3><span id="abilities"></span>
         </div>
+  
         
         <canvas id="myChart" style="display: none;"></canvas>
        
@@ -75,6 +80,7 @@ function openDetail(currentPokemon, id){
 
     `;
     showPokemonType(currentPokemon);
+    showPokemonAbilities(currentPokemon);
     loadStats(currentPokemon);
     loadMoves(currentPokemon);
     
@@ -96,10 +102,10 @@ let imgButton = document.getElementById('shiny-button');
 
   if(pokemonImg.src == `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`){
     pokemonImg.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`;
-    imgButton.innerHTML = 'normal';
+    imgButton.innerHTML = '<h4>normal</h4>';
   }else{
     pokemonImg.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
-    imgButton.innerHTML = 'shiny';
+    imgButton.innerHTML = '<h4>shiny</h4>';
   }
 }
 
@@ -107,8 +113,16 @@ function showPokemonType(currentPokemon){
     for (let i = 0; i < currentPokemon['types'].length; i++) {
         const type = currentPokemon['types'][i]['type']['name'];
         document.getElementById('types').innerHTML += `
-        <div>${type}</div>`;
+        <div><h4>${type}</h4></div>`;
     }
+}
+
+function showPokemonAbilities(currentPokemon){
+  for (let i = 0; i < currentPokemon['abilities'].length; i++) {
+    const ability = currentPokemon['abilities'][i]['ability']['name'];
+    document.getElementById('abilities').innerHTML += `
+    <div>${ability}</div>`;
+}
 }
 
 function loadMoves(currentPokemon){

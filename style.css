@@ -34,11 +34,6 @@ body{
 .pokemon-card:hover{
     transform: scale(1.05);
     cursor: pointer;
-
-}
-
-h1 {
-    margin: 0;
 }
 
 .detail-container{
@@ -50,13 +45,10 @@ h1 {
 }
 
 #pokemon-detail-card{
-    background-color:  rgb(63, 165, 255);
+    background-color:  lightgray;
     width: 400px;
-    border-bottom-left-radius: 24px;
-    border-bottom-right-radius: 24px;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
 }
+
 #pokemon-img-container{
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
@@ -64,7 +56,9 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 4px -5px black;
 }
+
 #pokemon-detail-card img{
     width: 200px;
     height: auto;
@@ -72,11 +66,100 @@ h1 {
 
 #button-area{
     background-color: white;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#shiny-button{
+    background-color: lightgray !important;
+    padding: 4px 24px !important;
+    margin-right: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 4px -5px black;
+}
+
+#button-area button{
+    background-color: transparent;
+    border: none;
+    padding: 16px;
+}
+
+#button-area button img{
+    height: 32px;
+    width: 32px;
 }
 
 #myChart{
     height: 100% !important;
     width: 100% !important;
+}
+
+h1{
+    margin: 0;
+}
+
+h2{
+    margin: 0;
+}
+
+h4{
+    margin: 0;
+}
+
+#name-number{
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: white;
+
+}
+
+.bttn-container-btm{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.buttons-bottom{
+    margin: 16px;
+    color: black;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    border-bottom: solid 2px rgba(0, 0, 0, 0.5);
+    font-size: 16px;
+    padding: 8px 24px;
+}
+
+.buttons-bottom:hover{
+    border-color: lightgray;
+    color:  lightgray;
+    font-weight: bold;
+}
+
+#types{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding-left: 16px;
+    background-color: white;
+}
+
+#types div{
+    background-color: lightgray;
+    padding: 4px 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 4px -5px black;
+}
+
+#pokemon-info{
+    padding-left: 16px;
+}
+
+#abs-container{
+    display: flex;
+    gap: 4px;
 }
