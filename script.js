@@ -4,6 +4,27 @@ let stats = [];
 let limit = 20;
 let ownedPokemon = [];
 let nameUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=0`;
+let typeColor = 
+[{'normal': 'rgba(169, 169, 169, 0.4)',
+  'fire': 'rgba(255, 0, 0, 0.4)',
+  'water': 'rgba(0, 0, 255, 0.4)',
+  'grass': 'rgba(0, 128, 0, 0.4)',
+  'electric': 'rgba(255, 255, 0, 0.4)',
+  'ground': 'rgba(139, 69, 19, 0.4, 0.4)',
+  'flying': 'rgba(135, 206, 235, 0.4)',
+  'rock': 'rgba(139, 126, 102, 0.4)',
+  'bug': 'rgba(124, 252, 0, 0.4)',
+  'poison': 'rgba(128, 0, 128, 0.4)',
+  'psychic': 'rgba(255, 182, 193, 0.4)',
+  'fighting': 'rgba(255, 165, 0, 0.4)',
+  'ice': 'rgba(173, 216, 230, 0.4)',
+  'ghost': 'rgba(148, 0, 211, 0.4)',
+  'dark': 'rgba(0, 0, 0, 0.4)',
+  'dragon': 'rgba(139, 0, 0, 0.4)',
+  'steel': 'rgba(192, 192, 192, 0.4)',
+  'fairy': 'rgba(255, 182, 193, 0.4)',
+}]
+
 function init(){    
     loadPokemonOverview();
     
@@ -36,7 +57,9 @@ async function loadPokemonData(id){
     let responseAsJSON = await response.json();
     console.log(responseAsJSON);
     let currentPokemon = responseAsJSON;
+    loadStats(currentPokemon);
     openDetail(currentPokemon, id);
+   
 }
 
 function openDetail(currentPokemon, id){
@@ -46,6 +69,12 @@ function openDetail(currentPokemon, id){
     detailContainer.style.display = 'flex';
     let weight = currentPokemon['weight'] / 10;
     let height = currentPokemon['height'] /10;
+    const hp = stats[0];
+    const atk = stats[1];
+    const def = stats[2];
+    const satk = stats[3];
+    const sdef = stats[4];
+    const spd = stats[5];
     let detail = document.getElementById('pokemon-detail-card');
     detail.innerHTML = `
         <div id="button-area">
@@ -67,23 +96,73 @@ function openDetail(currentPokemon, id){
         <button class="buttons-bottom" onclick="showStats()">Stats</button>
         <button class="buttons-bottom" onclick="showMoves(${id})">Moves</button>
       </div>  
-        <div id="pokemon-info">
-          <h3>Weight: </h3><span>${weight} kg</span>
-          <h3>Height: </h3><span>${height} m</span>
-          <h3>Abilities: </h3><span id="abilities"></span>
+        <div id="pokemon-info" style ="display: flex">
+          <div id="info-label">
+          <span>Weight: </span>
+          <span>Height: </span>
+          <span>Abilities: </span>
+          </div>
+          <div id="info">
+            <span>${weight} kg</span>
+            <span>${height} m</span>
+            <span id="abilities"></span>
+          </div>
         </div>
   
+      <div id="currentStats" style="display: none">
+
+        <div class="label-container">
+          <span>HP</span>
+          <span>ATTACK</span>
+          <span>DEFENSE</span>
+          <span>S-ATTACK</span>
+          <span>S-DEFENSE</span>
+          <span>SPEED</span>
+        </div>
+
+        <div class="stats-container">
+            <span>${hp}</span>
+            <span>${atk}</span>
+            <span>${def}</span>
+            <span>${satk}</span>
+            <span>${sdef}</span>
+            <span>${spd}</span>
+        </div>
+
+        <div class="bar-container">
+          <div class="progressbar">
+            <div class="hp" style="width: ${hp / 2}%"></div>
+          </div>
         
-        <canvas id="myChart" style="display: none;"></canvas>
+          <div class="progressbar">
+            <div class="attack" style="width: ${atk / 2}%"></div>
+          </div>
+    
+          <div class="progressbar">
+            <div class="defense" style="width: ${def / 2}%"></div>
+          </div>
+        
+          <div class="progressbar">
+            <div class="special-attack" style="width: ${satk / 2}%"></div>
+          </div>
+        
+          <div class="progressbar">
+            <div class="special-defense" style="width: ${sdef / 2}%"></div>
+          </div>
+    
+          <div class="progressbar">
+            <div class="speed" style="width: ${spd / 2}%"></div>
+          </div>
+
+        </div>
+      </div>
        
         <ul id="moves" class="d-none"></ul>
 
     `;
     showPokemonType(currentPokemon);
     showPokemonAbilities(currentPokemon);
-    loadStats(currentPokemon);
     loadMoves(currentPokemon);
-    
 }
 
 function closeDetail(){
@@ -93,7 +172,6 @@ function closeDetail(){
     pokedex.style.display = 'flex';
     labels = [];
     stats = [];
-    document.getElementById('myChart').innerHTML = '';
 }
 
 function changeImg(id){
@@ -113,8 +191,10 @@ function showPokemonType(currentPokemon){
     for (let i = 0; i < currentPokemon['types'].length; i++) {
         const type = currentPokemon['types'][i]['type']['name'];
         document.getElementById('types').innerHTML += `
-        <div><h4>${type}</h4></div>`;
+        <div id="typeColor${i}"><h4>${type}</h4></div>`;
+        document.getElementById(`typeColor${i}`).style.backgroundColor = typeColor[0][type];
     }
+    
 }
 
 function showPokemonAbilities(currentPokemon){
@@ -126,7 +206,7 @@ function showPokemonAbilities(currentPokemon){
 }
 
 function loadMoves(currentPokemon){
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < currentPokemon['moves'].length; i++) {
     const move = currentPokemon['moves'][i]['move']['name'];
     document.getElementById('moves').innerHTML += `<li>${move}</li>`; 
   }
@@ -146,50 +226,22 @@ function loadStats(currentPokemon){
   
 }
 
-function renderChart(){
-  const ctx = document.getElementById('myChart');
-
-  let chartDataSets = [{
-    label: '',
-    data: stats,
-    backgroundColor: [
-      'red',
-      'green',
-      'yellow',
-      'blue',
-      'orange',
-      'pink'
-    ],
-    hoverOffset: 6
-  }];
-
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: chartDataSets,
-      }
-    });
-    
-  }
-
 function showMoves(){
-  document.getElementById('moves').style.display = 'block';
-  document.getElementById('myChart').style.display = 'none';
+  document.getElementById('moves').style.display = 'flex';
+  document.getElementById('currentStats').style.display = 'none';
   document.getElementById('pokemon-info').style.display = 'none';
 }
 
 function showStats(){
   document.getElementById('moves').style.display = 'none';
-  document.getElementById('myChart').style.display = 'block';
+  document.getElementById('currentStats').style.display = 'flex';
   document.getElementById('pokemon-info').style.display = 'none';
-  renderChart();
 }
 
 function showInfo(){
   document.getElementById('moves').style.display = 'none';
-  document.getElementById('myChart').style.display = 'none';
-  document.getElementById('pokemon-info').style.display = 'block';
+  document.getElementById('currentStats').style.display = 'none';
+  document.getElementById('pokemon-info').style.display = 'flex';
 }
 
 function renderPokedex(i, id, name){

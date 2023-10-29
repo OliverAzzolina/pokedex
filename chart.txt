@@ -1,0 +1,50 @@
+function renderChart(){
+  const ctx = document.getElementById('myChart');
+
+  let chartDataSets = [{
+    label: '',
+    data: stats,
+    backgroundColor: [
+      'red',
+      'green',
+      'yellow',
+      'blue',
+      'orange',
+      'pink'
+    ],
+    hoverOffset: 6
+  }];
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: chartDataSets,
+      }
+    });
+    
+  }
+
+function showStats(){
+  document.getElementById('moves').style.display = 'none';
+  document.getElementById('myChart').style.display = 'block';
+  document.getElementById('pokemon-info').style.display = 'none';
+  renderChart();
+}
+
+function loadStats(currentPokemon){
+  
+  for (let i = 0; i < currentPokemon['stats'].length; i++) {
+    const label = currentPokemon['stats'][i]['stat']['name'];
+    labels.push(label);
+  }
+
+  for (let j = 0; j  < currentPokemon['stats'].length; j++) {
+    const stat = currentPokemon['stats'][j]['base_stat'] ;
+    stats.push(stat);
+  }
+  
+}
+
+
+ <canvas id="myChart" style="display: none;"></canvas>
